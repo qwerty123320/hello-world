@@ -166,3 +166,180 @@ public class OrderManager_zcy {
         listAllOrders();
     }
 }
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public class ProductManager_Lin {
+
+    // 商品分类枚举
+    public enum Category {
+        ELECTRONICS, CLOTHING, BOOKS, TOYS, HOME
+    }
+
+    // 商品实体类
+    public static class Product {
+        private String productId;
+        private String name;
+        private Category category;
+        private double price;
+        private int stock;
+
+        public Product(String name, Category category, double price, int stock) {
+            this.productId = generateProductId();
+            this.name = name;
+            this.category = category;
+            this.price = price;
+            this.stock = stock;
+        }
+
+        private String generateProductId() {
+            return "P-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        }
+
+        public String getProductId() {
+            return productId;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Category getCategory() {
+            return category;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public int getStock() {
+            return stock;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
+        }
+
+        public void setStock(int stock) {
+            this.stock = stock;
+        }
+
+        public String toString() {
+            return String.format("[ID: %s, 名称: %s, 分类: %s, 价格: %.2f, 库存: %d]",
+                    productId, name, category, price, stock);
+        }
+    }
+
+    // 商品列表（模拟数据库）
+    private static List<Product> productList = new ArrayList<>();
+
+    // 初始化模块
+    public static void init() {
+        System.out.println("🛒 商品模块已初始化");
+
+        // 加载一些默认商品
+        addProduct("小米13", Category.ELECTRONICS, 3999.00, 50);
+        addProduct("T恤", Category.CLOTHING, 129.00, 200);
+        addProduct("Java 编程思想", Category.BOOKS, 89.90, 30);
+        addProduct("遥控小汽车", Category.TOYS, 59.90, 100);
+        addProduct("电饭煲", Category.HOME, 299.00, 20);
+    }
+
+    // 添加商品
+    public static Product addProduct(String name, Category category, double price, int stock) {
+        Product product = new Product(name, category, price, stock);
+        productList.add(product);
+        System.out.println("✅ 添加商品成功：" + product);
+        return product;
+    }
+
+    // 获取所有商品
+    public static void listAllProducts() {
+        if (productList.isEmpty()) {
+            System.out.println("⚠️ 没有商品可展示");
+            return;
+        }
+        System.out.println("📦 所有商品列表：");
+        for (Product p : productList) {
+            System.out.println(p);
+        }
+    }
+
+    // 根据分类查找商品
+    public static void listProductsByCategory(Category category) {
+        System.out.println("🔍 分类：" + category + " 的商品：");
+        for (Product p : productList) {
+            if (p.getCategory() == category) {
+                System.out.println(p);
+            }
+        }
+    }
+
+    // 根据ID查找商品
+    public static Product getProductById(String productId) {
+        for (Product p : productList) {
+            if (p.getProductId().equals(productId)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    // 修改价格
+    public static void updatePrice(String productId, double newPrice) {
+        Product p = getProductById(productId);
+        if (p == null) {
+            System.out.println("❌ 商品不存在：" + productId);
+            return;
+        }
+        p.setPrice(newPrice);
+        System.out.println("✅ 更新价格成功：" + p);
+    }
+
+    // 修改库存
+    public static void updateStock(String productId, int newStock) {
+        Product p = getProductById(productId);
+        if (p == null) {
+            System.out.println("❌ 商品不存在：" + productId);
+            return;
+        }
+        p.setStock(newStock);
+        System.out.println("✅ 更新库存成功：" + p);
+    }
+
+    // 删除商品
+    public static void deleteProduct(String productId) {
+        Product p = getProductById(productId);
+        if (p == null) {
+            System.out.println("❌ 无法删除，商品不存在：" + productId);
+            return;
+        }
+        productList.remove(p);
+        System.out.println("🗑️ 商品已删除：" + productId);
+    }
+
+    // 示例测试
+    public static void main(String[] args) {
+        init();
+
+        System.out.println();
+        listAllProducts();
+
+        System.out.println();
+        listProductsByCategory(Category.ELECTRONICS);
+
+        System.out.println();
+        Product test = addProduct("手工笔记本", Category.BOOKS, 35.00, 10);
+        updatePrice(test.getProductId(), 29.99);
+        updateStock(test.getProductId(), 50);
+
+        System.out.println();
+        deleteProduct(test.getProductId());
+
+        System.out.println();
+        listAllProducts();
+    }
+}
+
+
